@@ -1,0 +1,45 @@
+-- Tabela de usuários
+CREATE TABLE usuario (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    senha VARCHAR(255) NOT NULL, -- armazena hash da senha
+    data_cadastro TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Tabela de cidades
+CREATE TABLE cidade (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL
+);
+
+-- Tabela de tipos de entrega (ex: presencial, correios, motoboy, etc)
+CREATE TABLE entrega (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    tipo VARCHAR(50) NOT NULL
+);
+
+-- Tabela de produtos
+CREATE TABLE produto (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    categoria VARCHAR(100) NOT NULL,
+    descricao TEXT,
+    imagem VARCHAR(255),
+    usuario_id INT NOT NULL,
+    cidade_id INT NOT NULL,
+    data_postagem TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (usuario_id) REFERENCES usuario(id) ON DELETE CASCADE,
+    FOREIGN KEY (cidade_id) REFERENCES cidade(id)
+);
+
+-- Relacionamento entre produtos e tipos de entrega (muitos-para-muitos)
+CREATE TABLE produto_entrega (
+    produto_id INT,
+    entrega_id INT,
+    PRIMARY KEY (produto_id, entrega_id),
+
+    FOREIGN KEY (produto_id) REFERENCES produto(id) ON DELETE CASCADE,
+    FOREIGN KEY (entrega_id) REFERENCES entrega(id)
+);
